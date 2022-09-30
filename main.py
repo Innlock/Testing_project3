@@ -23,3 +23,13 @@ def test_get_questions():
         for q in questions:
             assert q in right_questions
             questions.pop()
+
+def print_question(question):
+    pass
+
+
+def test_print_question():
+    question = ['Что во время игры принимает волейболист?', 'подачу', 'роды', '100 грамм', 'снотворное', '1']
+    q = print_question(question)
+    right_q = f"{question[0]}\nA. {question[1]}\nB. {question[2]}\nC. {question[3]}\nD. {question[4]}"
+    assert q == right_q
