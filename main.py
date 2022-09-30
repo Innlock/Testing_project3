@@ -89,8 +89,40 @@ def check_answer(player_a, right_a):
     return player_a == right_a
 
 
-def play_final_round(points):
+def command(points):
     pass
+
+
+def play_round(num, point, questions_file, points):
+    print(f"Раунд {num}. Каждый вопрос {point} баллов.\n")
+    questions = get_questions(questions_file)
+    for i in range(3):
+        question = questions.pop(random.randrange(len(questions)))
+        print_question(question)
+        answer = command(points)
+        if not answer:
+            print_half_question(question)
+            answer = command(points)
+        if answers[answer] == question[5]:
+            points += point
+            print("Верно.\n")
+        else:
+            print("Неверно.\n")
+    return points
+
+
+def play_final_round(points):
+    print("Финальный вопрос 1 000 000 баллов:")
+    questions = get_questions("questions4.txt")
+    question = random.choice(questions)
+    print_question(question)
+    answer = command(points)
+    if check_answer(answers[answer], question[5]):
+        points += 1000000
+        print("Верно!\n")
+    else:
+        print("Неверно.\n")
+    return points
 
 
 @pytest.mark.parametrize('inp', [True, False])
