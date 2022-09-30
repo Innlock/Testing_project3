@@ -60,3 +60,21 @@ def test_print_half_question():
     right_q2 = f"{question[0]}\nA. {question[1]}\nC. {question[3]}"
     right_q3 = f"{question[0]}\nA. {question[1]}\nD. {question[4]}"
     assert q == right_q1 or q == right_q2 or q == right_q3
+
+
+def play_round(num, point, questions_file):
+    pass
+
+
+def test_play_round():
+    str, answ = play_round(1, 100, "questions_test.txt")
+    print (str, answ)
+    questions = get_questions("questions_test.txt")
+    right_round1 = f"Раунд 1. Каждый вопрос 100 баллов.\n"
+    for question in questions:
+        right_round1.join(f"{question[0]}\nA. {question[1]}\nB. {question[2]}\nC. {question[3]}\nD. {question[4]}")
+    questions.reverse()
+    right_round2 = f"Раунд 1. Каждый вопрос 100 баллов.\n"
+    for question in questions:
+        right_round2.join(f"{question[0]}\nA. {question[1]}\nB. {question[2]}\nC. {question[3]}\nD. {question[4]}")
+    assert (str == right_round1 and answ == ["1", "3"]) or (str == right_round2 and answ == ["3", "1"])
