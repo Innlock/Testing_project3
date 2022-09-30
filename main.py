@@ -1,10 +1,9 @@
 import random
-import sys
-import time
+import pytest
+from unittest.mock import call, Mock
 
 commands = ["help", "start", "quit", "A", "B", "C", "D", "50/50", "call", "points"]
 answers = {"A": "1", "B": "2", "C": "3", "D": "4"}
-points = 0
 
 
 def print_commands():
@@ -38,10 +37,30 @@ def get_questions(file_name):
         return questions
 
 
+def test_get_questions():
+    right_questions = [['Откуда обычно достает подарки Дед Мороз?', 'из шкатулки', 'из мешка', 'из-за пазухи',
+                        'из интернет-магазина', '2'],
+                       ['Что во время игры принимает волейболист?', 'подачу', 'роды', '100 грамм', 'снотворное', '1'],
+                       ['Как же, согласно поговорке, там, где нас нет?', 'Тепло', 'Сытно', 'Хорошо', 'Весело', '3']]
+    questions = get_questions("questions_test.txt")
+    assert questions is not None
+    if questions:
+        for q in questions:
+            assert q in right_questions
+            questions.pop()
+
+
 def print_question(question):
     q = f"{question[0]}\nA. {question[1]}\nB. {question[2]}\nC. {question[3]}\nD. {question[4]}"
     print(q)
     return q
+
+
+def test_print_question():
+    question = ['Что во время игры принимает волейболист?', 'подачу', 'роды', '100 грамм', 'снотворное', '1']
+    q = print_question(question)
+    right_q = f"{question[0]}\nA. {question[1]}\nB. {question[2]}\nC. {question[3]}\nD. {question[4]}"
+    assert q == right_q
 
 
 def print_half_question(question):
@@ -57,87 +76,41 @@ def print_half_question(question):
     return q_print
 
 
-def command():
-    answer = input("Введите команду: ")
-    if answer not in commands:
-        print("Команда не найдена. Введите help для просмотра команд.")
-        answ = command()
+def test_print_half_question():
+    question = ['Что во время игры принимает волейболист?', 'подачу', 'роды', '100 грамм', 'снотворное', '1']
+    q = print_half_question(question)
+    right_q1 = f"{question[0]}\nA. {question[1]}\nB. {question[2]}"
+    right_q2 = f"{question[0]}\nA. {question[1]}\nC. {question[3]}"
+    right_q3 = f"{question[0]}\nA. {question[1]}\nD. {question[4]}"
+    assert q == right_q1 or q == right_q2 or q == right_q3
+
+
+def check_answer(player_a, right_a):
+    return player_a == right_a
+
+
+def play_final_round(points):
+    pass
+
+
+@pytest.mark.parametrize('inp', [True, False])
+def test_mocking_play_final_round(monkeypatch, inp):
+    my_mock1 = Mock(return_value=[['Что во время игры принимает волейболист?',
+                                   'подачу', 'роды', '100 грамм', 'снотворное', '1']])
+    my_mock2 = Mock()
+    my_mock3 = Mock(return_value="A")
+    my_mock4 = Mock(return_value=inp)
+    monkeypatch.setattr('main.get_questions', my_mock1)
+    monkeypatch.setattr('main.print_question', my_mock2)
+    monkeypatch.setattr('main.command', my_mock3)
+    monkeypatch.setattr('main.check_answer', my_mock4)
+
+    points = play_final_round(0)
+    my_mock1.assert_has_calls([call("questions4.txt")])
+    my_mock2.assert_called()
+    my_mock3.assert_called()
+    my_mock4.assert_called()
+    if inp:
+        assert points == 1000000
     else:
-        answer = commands.index(answer)
-
-    if answer == 0:
-        print_commands()
-        answ = command()
-    if answer == 1:
-        play_game()
-    if answer == 2:
-        print("Спасибо за игру.")
-        sys.exit()
-
-    if answer == 3:
-        return commands[answer]
-    if answer == 4:
-        return commands[answer]
-    if answer == 5:
-        return commands[answer]
-    if answer == 6:
-        return commands[answer]
-    if answer == 7:
-        return None
-    if answer == 8:
-        time.sleep(20)
-        print("Осталось 10 секунд.")
-        time.sleep(10)
-        print("Время вышло.")
-        answ = command()
-    if answer == 9:
-        print(f"Ваши очки: {points}")
-        answ = command()
-    return answ
-
-
-def play_round(num, point, questions_file):
-    global points
-    print(f"Раунд {num}. Каждый вопрос {point} баллов.\n")
-    questions = get_questions(questions_file)
-    for i in range(3):
-        question = questions.pop(random.randrange(len(questions)))
-        print_question(question)
-        answer = command()
-        if not answer:
-            print_half_question(question)
-            answer = command()
-        if answers[answer] == question[5]:
-            points += point
-            print("Верно.\n")
-        else:
-            print("Неверно.\n")
-
-
-def play_game():
-    global points
-    points = 0
-    play_round(1, 100, "questions1.txt")
-    play_round(2, 5000, "questions2.txt")
-    play_round(3, 10000, "questions3.txt")
-    if points < 300:
-        print("Сожалеем, но вы не дошли до финала.")
-        sys.exit()
-    print("Финальный вопрос 1 000 000 баллов:")
-    questions = get_questions("questions4.txt")
-    question = random.choice(questions)
-    print_question(question)
-    answer = command()
-    if answers[answer] == question[5]:
-        points += 1000000
-        print("Верно!\n")
-    else:
-        print("Неверно.\n")
-    print(f"Ваш выигрыш: {points} рублей\nСпасибо за игру!")
-    sys.exit()
-
-
-print('Игра «Как стать миллионером»')
-print_commands()
-print("Введите start, чтобы начать игру")
-command()
+        assert points == 0
