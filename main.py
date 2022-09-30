@@ -151,7 +151,15 @@ def test_mocking_play_final_round(monkeypatch, inp):
 
 
 def play_game(points):
-    pass
+    points = play_round(1, 100, "questions1.txt", points)
+    points = play_round(2, 5000, "questions2.txt", points)
+    points = play_round(3, 10000, "questions3.txt", points)
+    if points < 300:
+        print("Сожалеем, но вы не дошли до финала.")
+    else:
+        points = play_final_round(points)
+        print(f"Ваш выигрыш: {points} рублей\nСпасибо за игру!")
+    sys.exit()
 
 
 @pytest.mark.parametrize('inp', [500, 1])
