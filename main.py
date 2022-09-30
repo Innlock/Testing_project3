@@ -24,8 +24,11 @@ def test_get_questions():
             assert q in right_questions
             questions.pop()
 
+
 def print_question(question):
-    pass
+    q = f"{question[0]}\nA. {question[1]}\nB. {question[2]}\nC. {question[3]}\nD. {question[4]}"
+    print(q)
+    return q
 
 
 def test_print_question():
