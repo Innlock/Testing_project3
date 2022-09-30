@@ -1,4 +1,6 @@
 import random
+import sys
+
 import pytest
 from unittest.mock import call, Mock
 
@@ -146,3 +148,26 @@ def test_mocking_play_final_round(monkeypatch, inp):
         assert points == 1000000
     else:
         assert points == 0
+
+
+def play_game(points):
+    pass
+
+
+@pytest.mark.parametrize('inp', [500, 1])
+def test_mocking_play_game(monkeypatch, inp):
+    my_mock1 = Mock(return_value=inp)
+    my_mock2 = Mock()
+    my_mock3 = Mock()
+    monkeypatch.setattr('main.play_round', my_mock1)
+    monkeypatch.setattr('main.play_final_round', my_mock2)
+    monkeypatch.setattr('main.sys.exit', my_mock3)
+    play_game(0)
+    my_mock1.assert_has_calls([call(1, 100, "questions1.txt", 0),
+                               call(2, 5000, "questions2.txt", inp),
+                               call(3, 10000, "questions3.txt", inp)])
+    if inp == 500:
+        my_mock2.assert_has_calls([call(inp)])
+    else:
+        my_mock2.assert_not_called()
+    my_mock3.assert_called_once()
