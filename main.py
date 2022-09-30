@@ -1,3 +1,5 @@
+import random
+
 commands = ["help", "start", "quit", "A", "B", "C", "D", "50/50", "call", "points"]
 answers = {"A": "1", "B": "2", "C": "3", "D": "4"}
 
@@ -39,7 +41,16 @@ def test_print_question():
 
 
 def print_half_question(question):
-    pass
+    q = {0: question[0], question[1]: "A", question[2]: "B", question[3]: "C", question[4]: "D"}
+    a1 = question[int(question[5])]
+    question = question[1:5]
+    question.remove(a1)
+    a2 = random.choice(question)
+    half_question = {q[a1]: a1, q[a2]: a2}
+    half_question = sorted(half_question.items())
+    q_print = f"{q[0]}\n{half_question[0][0]}. {half_question[0][1]}\n{half_question[1][0]}. {half_question[1][1]}"
+    print(q_print)
+    return q_print
 
 
 def test_print_half_question():
