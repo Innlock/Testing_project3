@@ -36,3 +36,16 @@ def test_print_question():
     q = print_question(question)
     right_q = f"{question[0]}\nA. {question[1]}\nB. {question[2]}\nC. {question[3]}\nD. {question[4]}"
     assert q == right_q
+
+
+def print_half_question(question):
+    pass
+
+
+def test_print_half_question():
+    question = ['Что во время игры принимает волейболист?', 'подачу', 'роды', '100 грамм', 'снотворное', '1']
+    q = print_half_question(question)
+    right_q1 = f"{question[0]}\nA. {question[1]}\nB. {question[2]}"
+    right_q2 = f"{question[0]}\nA. {question[1]}\nC. {question[3]}"
+    right_q3 = f"{question[0]}\nA. {question[1]}\nD. {question[4]}"
+    assert q == right_q1 or q == right_q2 or q == right_q3
