@@ -3,7 +3,13 @@ answers = {"A": "1", "B": "2", "C": "3", "D": "4"}
 
 
 def get_questions(file_name):
-    pass
+    with open(file_name, encoding='utf-8', mode='r') as f:
+        text = f.read()
+        text = text.split('\n')
+        questions = []
+        for x in range(0, len(text), 6):
+            questions.append(text[x:x + 6])
+        return questions
 
 
 def test_get_questions():
