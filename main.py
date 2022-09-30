@@ -2,6 +2,7 @@ import random
 
 commands = ["help", "start", "quit", "A", "B", "C", "D", "50/50", "call", "points"]
 answers = {"A": "1", "B": "2", "C": "3", "D": "4"}
+points = 0
 
 
 def get_questions(file_name):
@@ -62,8 +63,31 @@ def test_print_half_question():
     assert q == right_q1 or q == right_q2 or q == right_q3
 
 
-def play_round(num, point, questions_file):
+def command():
     pass
+
+
+def play_round(num, point, questions_file):
+    global points
+    str = f"Раунд {num}. Каждый вопрос {point} баллов.\n"
+    print(str)
+    answ = []
+    questions = get_questions(questions_file)
+    for i in range(2):  # 2 для теста, вообще в раундк по 3 вопроса
+        question = questions.pop(random.randrange(len(questions)))
+        print_question(question)
+        # answer = command()
+        # if not answer:
+        #     print_half_question(question)
+        #     answer = command()
+        # if answers[answer] == question[5]:
+        #     points += point
+        #     print("Верно.\n")
+        # else:
+        #     print("Неверно.\n")
+        str.join(print_question(question))
+        answ.append(question[5])
+    return str, answ
 
 
 def test_play_round():
