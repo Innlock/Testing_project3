@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 
 import pytest
 from unittest.mock import call, Mock
@@ -92,7 +93,43 @@ def check_answer(player_a, right_a):
 
 
 def command(points):
-    pass
+    answer = input("Введите команду: ")
+    if answer not in commands:
+        print("Команда не найдена. Введите help для просмотра команд.")
+        answ = command(points)
+    else:
+        answer = commands.index(answer)
+
+    if answer == 0:
+        print_commands()
+        answ = command(points)
+    if answer == 1:
+        points = 0
+        play_game(points)
+    if answer == 2:
+        print("Спасибо за игру.")
+        sys.exit()
+
+    if answer == 3:
+        return commands[answer]
+    if answer == 4:
+        return commands[answer]
+    if answer == 5:
+        return commands[answer]
+    if answer == 6:
+        return commands[answer]
+    if answer == 7:
+        return None
+    if answer == 8:
+        time.sleep(20)
+        print("Осталось 10 секунд.")
+        time.sleep(10)
+        print("Время вышло.")
+        answ = command(points)
+    if answer == 9:
+        print(f"Ваши очки: {points}")
+        answ = command(points)
+    return answ
 
 
 def play_round(num, point, questions_file, points):
@@ -179,3 +216,10 @@ def test_mocking_play_game(monkeypatch, inp):
     else:
         my_mock2.assert_not_called()
     my_mock3.assert_called_once()
+
+
+if __name__ == "__main__":
+    print('Игра «Как стать миллионером»')
+    print_commands()
+    print("Введите start, чтобы начать игру")
+    command(0)
